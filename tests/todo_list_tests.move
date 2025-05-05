@@ -15,11 +15,11 @@ fun test_todo_list(): TodoList {
     let mut list = new(&mut ctx);
 
     // Add an item and check length
-    add(&mut list, b"first task".to_ascii_string());
+    add(&mut list, b"first task".to_string());
     assert!(length(&list) == 1, ELengthAfterFirstAdd);
 
     // Add another item and check length
-    add(&mut list, b"second task".to_ascii_string());
+    add(&mut list, b"second task".to_string());
     assert!(length(&list) == 2, ELengthAfterSecondAdd);
 
     // Remove the item and check length
@@ -36,7 +36,7 @@ fun test_todo_list_fail(): TodoList {
     let mut list = new(&mut ctx);
 
     // Add an item and check length
-    add(&mut list, b"first task".to_ascii_string());
+    add(&mut list, b"first task".to_string());
     assert!(length(&list) == 2, ENotLengthAfterRemove);
     list
 }
