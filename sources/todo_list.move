@@ -70,10 +70,3 @@ public fun remove(list: &mut TodoList, index: u64) {
 public fun length(list: &TodoList): u64 {
     list.items.length()
 }
-
-// sui client ptb \
-// --gas-budget 100000000 \
-// --assign sender @$MY_ADDRESS \
-// --move-call $PACKAGE_ID::todo_list::new \
-// --assign list \
-// --transfer-objects "[list]" sender
