@@ -1,6 +1,6 @@
 import { ConnectButton } from "@mysten/dapp-kit";
 import { Box, Container, Flex, Heading } from "@radix-ui/themes";
-import { TodoList } from "./TodoList";
+import { Todo } from "./Todo";
 
 function App() {
   return (
@@ -41,7 +41,7 @@ function App() {
             border: "1px solid var(--gray-a3)"
           }}
         >
-          <TodoList />
+          <Todo />
         </Container>
       </Container>
     </div>

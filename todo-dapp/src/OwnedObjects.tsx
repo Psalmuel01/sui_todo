@@ -12,7 +12,6 @@ export function OwnedObjects() {
       enabled: !!account,
     },
   );
-  console.log(data);
 
   if (!account) {
     return null;
@@ -20,8 +19,8 @@ export function OwnedObjects() {
 
   if (error) {
     return (
-      <Box p="4" style={{ 
-        background: "#fee2e2", 
+      <Box p="4" style={{
+        background: "#fee2e2",
         borderRadius: "8px",
         border: "1px solid #fecaca"
       }}>
@@ -43,16 +42,16 @@ export function OwnedObjects() {
   }
 
   return (
-    <Flex direction="column" gap="4">
-      <Heading size="4" style={{ color: "#1e293b" }}>
-        {data.data.length === 0 
-          ? "No objects owned" 
+    <Flex direction="column" gap="4" mt={"8"}>
+      <Heading size="3" style={{ color: "#1e293b" }}>
+        {data.data.length === 0
+          ? "No objects owned"
           : `Objects owned (${data.data.length})`}
       </Heading>
-      
+
       {data.data.length === 0 ? (
-        <Box p="4" style={{ 
-          background: "var(--gray-a2)", 
+        <Box p="4" style={{
+          background: "var(--gray-a2)",
           borderRadius: "8px",
           border: "1px solid var(--gray-a3)",
           textAlign: "center"
@@ -64,11 +63,11 @@ export function OwnedObjects() {
       ) : (
         <Flex direction="column" gap="2">
           {data.data.map((object) => (
-            <Box 
+            <Box
               key={object.data?.objectId}
-              p="3"
-              style={{ 
-                background: "var(--gray-a2)", 
+              px="3"
+              style={{
+                background: "var(--gray-a2)",
                 borderRadius: "8px",
                 border: "1px solid var(--gray-a3)"
               }}
