@@ -42,7 +42,7 @@ export function OwnedObjects() {
   }
 
   return (
-    <Flex direction="column" gap="4" mt={"8"}>
+    <Flex direction="column" gap="4" mt={"4"}>
       <Heading size="3" style={{ color: "#1e293b" }}>
         {data.data.length === 0
           ? "No objects owned"

@@ -1,6 +1,7 @@
 import { ConnectButton } from "@mysten/dapp-kit";
 import { Box, Container, Flex, Heading } from "@radix-ui/themes";
 import { Todo } from "./Todo";
+import Nft from "./Nft";
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
       >
         <Box>
           <Heading size="5" style={{ fontWeight: 700, color: "#3b82f6" }}>
-            Todo Dapp
+            Sam Dapp
           </Heading>
         </Box>
 
@@ -42,6 +43,20 @@ function App() {
           }}
         >
           <Todo />
+        </Container>
+        <Container
+          mt="6"
+          pt="4"
+          px="6"
+          style={{
+            background: "white",
+            minHeight: 600,
+            borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+            border: "1px solid var(--gray-a3)"
+          }}
+        >
+          <Nft />
         </Container>
       </Container>
     </div>

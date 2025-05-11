@@ -74,7 +74,6 @@ export function TodoList({ listId }: { listId: string }) {
         return data.content.fields as { id: number; items: string[] };
     }
 
-
     // const ownedByCurrentAccount =
     //     getCounterFields(data.data)?.owner === account?.address;
 
@@ -105,6 +104,10 @@ export function TodoList({ listId }: { listId: string }) {
 
     if (error) {
         return <Text color="red">Error loading todo list: {error.message}</Text>;
+    }
+
+    if (!data.data) {
+        return <Text>Todo list not found</Text>;
     }
 
     return (
@@ -139,7 +142,7 @@ export function TodoList({ listId }: { listId: string }) {
                     <Text size="2" style={{ color: "#64748b" }}>No tasks yet. Add one to get started!</Text>
                 </Box>
             ) : (
-                <Box style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <Box style={{ display: "flex", flexDirection: "column", gap: "0px" }}>
                     {todos.map((todo, index) => (
                         <Box
                             key={index}

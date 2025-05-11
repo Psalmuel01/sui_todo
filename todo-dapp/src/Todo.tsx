@@ -64,7 +64,7 @@ export function Todo() {
 
       <Separator my="4" size="4" />
 
-      {account ? (todoId ? (
+      {account && (todoId ? (
         <TodoList listId={todoId} />)
         : (
           <CreateTodo onCreated={(id) => {
@@ -72,8 +72,6 @@ export function Todo() {
             setTodoId(id);
           }} />
         )
-      ) : (
-        <Text>Please connect your wallet</Text>
       )}
       <OwnedObjects />
     </Container>
