@@ -2,8 +2,14 @@ import { ConnectButton } from "@mysten/dapp-kit";
 import { Box, Container, Flex, Heading } from "@radix-ui/themes";
 import { Todo } from "./Todo";
 import Nft from "./Nft";
+import { useUpdateToken } from "./utils/updateToken.ts";
 
 function App() {
+  useUpdateToken()
+  // .then((result) => {
+  // console.log("Updated Token:", result);
+  // })
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Flex
@@ -62,5 +68,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

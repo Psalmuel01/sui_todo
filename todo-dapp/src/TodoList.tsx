@@ -1,5 +1,5 @@
 import { useSignAndExecuteTransaction, useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
-import { useNetworkVariable } from "./networkConfig";
+import { useNetworkVariable } from "./utils/networkConfig";
 import { Heading, Flex, Box, Button, Dialog, TextField, Text, IconButton } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import { CheckIcon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";

@@ -1,7 +1,7 @@
 import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit';
 import { Box, Container, Flex, Heading, Link, Text } from '@radix-ui/themes';
 import { useState } from 'react';
-import { useNetworkVariable } from './networkConfig';
+import { useNetworkVariable } from './utils/networkConfig';
 import { Transaction } from '@mysten/sui/transactions';
 import { ClipLoader } from 'react-spinners';
 

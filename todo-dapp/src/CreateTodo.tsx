@@ -1,5 +1,5 @@
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
-import { useNetworkVariable } from './networkConfig';
+import { useNetworkVariable } from './utils/networkConfig';
 import { Transaction } from "@mysten/sui/transactions";
 import { Button } from "@radix-ui/themes";
 import ClipLoader from "react-spinners/ClipLoader";
