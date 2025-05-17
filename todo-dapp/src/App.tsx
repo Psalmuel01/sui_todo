@@ -1,14 +1,10 @@
 import { ConnectButton } from "@mysten/dapp-kit";
 import { Box, Container, Flex, Heading } from "@radix-ui/themes";
 import { Todo } from "./Todo";
-import Nft from "./Nft";
-import { useUpdateToken } from "./utils/updateToken.ts";
+// import Nft from "./Nft";
+import Token from "./Token";
 
 function App() {
-  useUpdateToken()
-  // .then((result) => {
-  // console.log("Updated Token:", result);
-  // })
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -35,6 +31,7 @@ function App() {
         </Box>
       </Flex>
 
+
       <Container size="3" mt="6">
         <Container
           mt="6"
@@ -48,9 +45,10 @@ function App() {
             border: "1px solid var(--gray-a3)"
           }}
         >
-          <Todo />
+          <Token />
         </Container>
-        <Container
+
+        {/* <Container
           mt="6"
           pt="4"
           px="6"
@@ -63,6 +61,21 @@ function App() {
           }}
         >
           <Nft />
+        </Container> */}
+
+        <Container
+          mt="6"
+          pt="4"
+          px="6"
+          style={{
+            background: "white",
+            minHeight: 600,
+            borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+            border: "1px solid var(--gray-a3)"
+          }}
+        >
+          <Todo />
         </Container>
       </Container>
     </div>
