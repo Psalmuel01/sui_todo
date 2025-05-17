@@ -73,57 +73,25 @@ export default function Nft() {
                 >
                     <form onSubmit={handleSubmit}>
                         <Flex direction="column" gap="4">
-                            <Box>
-                                <Text as="label" size="2" weight="medium" mb="2">
-                                    Name
-                                </Text>
-                                <input
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    style={{
-                                        width: '100%',
-                                        padding: '8px',
-                                        borderRadius: '6px',
-                                        border: '1px solid var(--gray-a6)',
-                                    }}
-                                    required
-                                />
-                            </Box>
-                            <Box>
-                                <Text as="label" size="2" weight="medium" mb="2">
-                                    Description
-                                </Text>
-                                <textarea
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    style={{
-                                        width: '100%',
-                                        padding: '8px',
-                                        borderRadius: '6px',
-                                        border: '1px solid var(--gray-a6)',
-                                    }}
-                                    rows={3}
-                                    required
-                                />
-                            </Box>
-                            <Box>
-                                <Text as="label" size="2" weight="medium" mb="2">
-                                    URL
-                                </Text>
-                                <input
-                                    type="url"
-                                    value={url}
-                                    onChange={(e) => setUrl(e.target.value)}
-                                    style={{
-                                        width: '100%',
-                                        padding: '8px',
-                                        borderRadius: '6px',
-                                        border: '1px solid var(--gray-a6)',
-                                    }}
-                                    required
-                                />
-                            </Box>
+                            {[["Name", name, setName], ["Description", description, setDescription], ["URL", url, setUrl]].map(
+                                ([label, value, setValue], i) => (
+                                    <Box key={i}>
+                                        <Text as="label" size="2" weight="medium" mb="2">{label as string}</Text>
+                                        <input
+                                            type={label === "Decimal" ? "number" : "text"}
+                                            value={value as string}
+                                            onChange={(e) => (setValue as Function)(e.target.value)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '8px',
+                                                borderRadius: '6px',
+                                                border: '1px solid var(--gray-a6)',
+                                            }}
+                                            required
+                                        />
+                                    </Box>
+                                )
+                            )}
                             <button
                                 type="submit"
                                 style={{
@@ -147,7 +115,7 @@ export default function Nft() {
                             <Text>NFT created successfully!</Text>
                             <Text>NFT ID: {nftId || "loading id..."}</Text>
                             {nftId && (
-                                <Link href={`https://suiscan.xyz/testnet/object/${nftId}`}>View NFT</Link>
+                                <Link href={`https://suiscan.xyz/testnet/object/${nftId}`} target="_blank">View NFT</Link>
                             )}
                         </Box>
                     )}

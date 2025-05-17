@@ -1,26 +1,21 @@
 import { bcs } from '@mysten/bcs';
-import init, { deserialize, version } from "@mysten/move-bytecode-template";
+import init, { deserialize, version, update_constants, update_identifiers, get_constants } from '@mysten/move-bytecode-template';
 import url from '@mysten/move-bytecode-template/move_bytecode_template_bg.wasm?url';
-import { update_constants, update_identifiers, get_constants } from '@mysten/move-bytecode-template';
 import bytecodeUrl from '/my_coin.mv?url';
 
-async function getBytecode(): Promise<Uint8Array> {
+const fetchBytecode = async (): Promise<Uint8Array> => {
   try {
-    const response = await fetch(bytecodeUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch bytecode: ${response.statusText}`);
-    }
-    return new Uint8Array(await response.arrayBuffer());
-  } catch (error) {
-    console.error("Error fetching bytecode:", error);
-    throw error;
+    const res = await fetch(bytecodeUrl);
+    if (!res.ok) throw new Error(`Failed to fetch bytecode: ${res.statusText}`);
+    return new Uint8Array(await res.arrayBuffer());
+  } catch (err) {
+    console.error('Error fetching bytecode:', err);
+    throw err;
   }
-}
-
-const stringtoU8Array = (data: any): Uint8Array => {
-  const encoder = new TextEncoder();
-  return new Uint8Array(encoder.encode(data));
 };
+
+const encodeText = (text: string): Uint8Array =>
+  new TextEncoder().encode(text);
 
 interface UpdateTokenResult {
   constants: any;
@@ -28,70 +23,58 @@ interface UpdateTokenResult {
   updatedBytes: Uint8Array;
 }
 
-const useUpdateToken = async (name: any, symbol: any, description: any, decimal: any): Promise<UpdateTokenResult> => {
+export const useUpdateToken = async (
+  name: string,
+  symbol: string,
+  description: string,
+  decimal: number
+): Promise<UpdateTokenResult> => {
   try {
-    const initBytecode = await getBytecode();
+    const initialBytes = await fetchBytecode();
 
     await init(url);
-    deserialize(initBytecode);
-    version();
+    deserialize(initialBytes);
+    version(); // Optional: version check
 
-    // console.log("Bytecode version:", version());
-    // console.log("Bytecode:", bytecode);
-    // console.log("Bytecode length:", bytecode.length);
-
-    let constants = get_constants(initBytecode);
-    let updatedBytes;
-
-    updatedBytes = update_identifiers(initBytecode, {
+    let updatedBytes = update_identifiers(initialBytes, {
       TEMPLATE: "MY_COIN",
-      template: "my_coin"
+      template: "my_coin",
     });
 
-    // Update DECIMALS
-    updatedBytes = update_constants(
-        initBytecode,
-        bcs.u8().serialize(decimal).toBytes(), // new value
-        bcs.u8().serialize(2).toBytes(), // current value
-        'U8',
-    );
-
-    console.log({ updatedBytes1: updatedBytes, constants1: constants });
-
-    // Update SYMBOL
-    updatedBytes = update_constants(
-      initBytecode,
-      bcs.vector(bcs.u8()).serialize((new TextEncoder().encode(symbol))).toBytes(),
-      bcs.vector(bcs.u8()).serialize(Array.from(new TextEncoder().encode('MY'))).toBytes(),
-      'Vector(U8)',
-    );
-
-    // Update NAME
     updatedBytes = update_constants(
       updatedBytes,
-      bcs.vector(bcs.u8()).serialize(Array.from(new TextEncoder().encode(name))).toBytes(),
-      bcs.vector(bcs.u8()).serialize(Array.from(new TextEncoder().encode('My Coin'))).toBytes(),
-      'Vector(U8)',
+      bcs.u8().serialize(decimal).toBytes(),
+      bcs.u8().serialize(2).toBytes(),
+      'U8',
     );
 
-    // Update DESCRIPTION
     updatedBytes = update_constants(
       updatedBytes,
-      bcs.vector(bcs.u8()).serialize(stringtoU8Array(description)).toBytes(),
-      bcs.vector(bcs.u8()).serialize(stringtoU8Array('My coi description')).toBytes(),
+      bcs.vector(bcs.u8()).serialize(encodeText(symbol)).toBytes(),
+      bcs.vector(bcs.u8()).serialize(encodeText('MY')).toBytes(),
       'Vector(U8)',
     );
 
-    console.assert(updatedBytes != initBytecode, 'identifiers were not updatedBytes!');
-    console.log("UpdatedBytes bytecode:", updatedBytes);
-    console.log("UpdatedBytes bytecode length:", updatedBytes.length);
+    updatedBytes = update_constants(
+      updatedBytes,
+      bcs.vector(bcs.u8()).serialize(encodeText(name)).toBytes(),
+      bcs.vector(bcs.u8()).serialize(encodeText('My Coin')).toBytes(),
+      'Vector(U8)',
+    );
 
-    console.log({ updatedBytes, constants });
-    return { constants, initialBytes: initBytecode, updatedBytes };
+    updatedBytes = update_constants(
+      updatedBytes,
+      bcs.vector(bcs.u8()).serialize(encodeText(description)).toBytes(),
+      bcs.vector(bcs.u8()).serialize(encodeText('My coi description')).toBytes(),
+      'Vector(U8)',
+    );
 
-  } catch (error) {
-    console.error("Error updating token:", error);
-    throw error;
+    const constants = get_constants(initialBytes);
+    console.assert(updatedBytes !== initialBytes, 'Bytecode was not updated!');
+
+    return { constants, initialBytes, updatedBytes };
+  } catch (err) {
+    console.error('Error updating token:', err);
+    throw err;
   }
 };
-export { useUpdateToken };

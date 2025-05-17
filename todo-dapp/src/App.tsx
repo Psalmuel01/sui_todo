@@ -1,7 +1,7 @@
 import { ConnectButton } from "@mysten/dapp-kit";
 import { Box, Container, Flex, Heading } from "@radix-ui/themes";
 import { Todo } from "./Todo";
-// import Nft from "./Nft";
+import Nft from "./Nft";
 import Token from "./Token";
 
 function App() {
@@ -48,7 +48,7 @@ function App() {
           <Token />
         </Container>
 
-        {/* <Container
+        <Container
           mt="6"
           pt="4"
           px="6"
@@ -61,7 +61,7 @@ function App() {
           }}
         >
           <Nft />
-        </Container> */}
+        </Container>
 
         <Container
           mt="6"
