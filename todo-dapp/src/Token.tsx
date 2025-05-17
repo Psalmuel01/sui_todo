@@ -31,19 +31,19 @@ export default function Token() {
                 console.log("Updated Token:", { constants, initialBytes, updatedBytes });
             })
 
-        const { initialBytes, updatedBytes } = await useUpdateToken(name, symbol, description, decimal);
-        publishNewBytecode(updatedBytes, initialBytes, tokenPackageId);
+        const { updatedBytes } = await useUpdateToken(name, symbol, description, decimal);
+        publishNewBytecode(updatedBytes, tokenPackageId);
 
     };
 
 
-    const publishNewBytecode = async (updatedBytes: Uint8Array, initialBytes: Uint8Array, packageId: any) => {
+    const publishNewBytecode = async (updatedBytes: Uint8Array, packageId: any) => {
         try {
             const tx = new Transaction();
             tx.setGasBudget(100000000);
             const [upgradeCap] = tx.publish({
-                modules: [[...updatedBytes, ...initialBytes]],
-                dependencies: [normalizeSuiObjectId("0x1"), normalizeSuiObjectId("0x2"), normalizeSuiObjectId(packageId)],
+                modules: [[...updatedBytes]],
+                dependencies: [normalizeSuiObjectId("0x1"), normalizeSuiObjectId("0x2")],
             })
             tx.transferObjects([upgradeCap], tx.pure("address", account!.address));
 
@@ -65,6 +65,7 @@ export default function Token() {
                                 showInput: true,
                             },
                         });
+                        console.log({ digest, effects });
                         if (effects?.status.status === "success") {
                             console.log("New asset published! Digest:", digest);
                             newPackageId = effects.created?.find(
@@ -190,7 +191,7 @@ export default function Token() {
                     </form>
                     {isSuccess && (
                         <Box mt="4" style={{ color: "#22c55e", display: "flex", flexDirection: "column", gap: "4px", fontWeight: "semibold" }}>
-                            <Text>token created successfully!</Text>
+                            <Text>{isSuccess && "token created successfully!"}</Text>
                             <Text>token ID: {newTokenId || "loading id..."}</Text>
                             {newTokenId && (
                                 <Link href={`https://suiscan.xyz/testnet/object/${newTokenId}`}>View token</Link>
