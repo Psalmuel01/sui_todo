@@ -16,11 +16,10 @@ import { ClipLoader } from 'react-spinners';
 import { Transaction } from '@mysten/sui/transactions';
 import { normalizeSuiObjectId } from '@mysten/sui/utils';
 import { useUpdateToken } from './utils/updateToken';
-// import { useNetworkVariable } from './utils/networkConfig';
+import TokenDetails from './TokenDetails';
 
 export default function Token() {
     const account = useCurrentAccount();
-    // const tokenPackageId = useNetworkVariable("tokenPackageId");
 
     const [name, setName] = useState('');
     const [symbol, setSymbol] = useState('');
@@ -29,6 +28,7 @@ export default function Token() {
     const [newPkgId, setNewPkgId] = useState('');
     const [txId, setTxId] = useState('');
     const [treasuryCap, setTreasuryCap] = useState('');
+    const [tokenCreated, setTokenCreated] = useState(false);
 
     const { mutate: signAndExecute, isSuccess, isPending } = useSignAndExecuteTransaction();
     const suiClient = useSuiClient();
@@ -73,7 +73,7 @@ export default function Token() {
                     if (res.effects?.status.status === "success") {
                         console.log("Token created successfully:", res);
 
-                        const txId = res.effects.transactionDigest; // /tx/{txId}
+                        const txId = res.effects.transactionDigest;
                         const newPkgId = res.objectChanges?.find(
                             (item) => item.type === "published"
                         )?.packageId;
@@ -88,6 +88,9 @@ export default function Token() {
                         setTxId(txId);
                         setNewPkgId(newPkgId || "");
                         setTreasuryCap(treasuryCap);
+
+                        // Set token as created after all data is fetched
+                        setTokenCreated(true);
                     } else {
                         throw new Error("Publishing failed");
                     }
@@ -98,6 +101,27 @@ export default function Token() {
             }
         );
     };
+
+    // Create token data object to pass to TokenDetails
+    const tokenData = {
+        name,
+        symbol,
+        description,
+        decimal,
+        newPkgId,
+        txId,
+        treasuryCap
+    };
+
+    // Function to go back to creation form
+    const handleBackToCreate = () => {
+        setTokenCreated(false);
+    };
+
+    // If token is created, show the TokenDetails component
+    if (tokenCreated && treasuryCap) {
+        return <TokenDetails tokenData={tokenData} onBack={handleBackToCreate} />;
+    }
 
     return (
         <Container my="4" style={{ color: "#1e293b" }}>
@@ -150,19 +174,25 @@ export default function Token() {
                             </button>
                         </Flex>
                     </form>
-                    {isSuccess && (
+                    {isSuccess && !tokenCreated && (
                         <Box mt="4" style={{ color: "#22c55e", display: "flex", flexDirection: "column", gap: "4px", fontWeight: "semibold" }}>
                             <Text>Token created successfully!</Text>
                             <Text>Token ID: {newPkgId || "Loading ID..."}</Text>
-                            {newPkgId && (
+                            {txId && (
                                 <Link href={`https://suiscan.xyz/testnet/tx/${txId}`} target="_blank">
                                     View tx
                                 </Link>
                             )}
-                            <Link href={`https://suiscan.xyz/testnet/object/${newPkgId}`} target="_blank">
-                                Package Id ({newPkgId})
-                            </Link>
-                            <p>Here is your treasury cap to perform transactions: {treasuryCap}</p>
+                            {newPkgId && (
+                                <Link href={`https://suiscan.xyz/testnet/object/${newPkgId}`} target="_blank">
+                                    Package Id ({newPkgId})
+                                </Link>
+                            )}
+                            {treasuryCap && (
+                                <Text>
+                                    Treasury cap: {treasuryCap}
+                                </Text>
+                            )}
                         </Box>
                     )}
                 </Box>
