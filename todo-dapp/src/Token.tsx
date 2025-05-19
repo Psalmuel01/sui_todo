@@ -26,7 +26,9 @@ export default function Token() {
     const [symbol, setSymbol] = useState('');
     const [description, setDescription] = useState('');
     const [decimal, setDecimal] = useState('');
-    const [newTokenId, setNewTokenId] = useState('');
+    const [newPkgId, setNewPkgId] = useState('');
+    const [txId, setTxId] = useState('');
+    const [treasuryCap, setTreasuryCap] = useState('');
 
     const { mutate: signAndExecute, isSuccess, isPending } = useSignAndExecuteTransaction();
     const suiClient = useSuiClient();
@@ -57,7 +59,7 @@ export default function Token() {
             { transaction: tx },
             {
                 onSuccess: async ({ digest }) => {
-                    const { effects } = await suiClient.waitForTransaction({
+                    const res = await suiClient.waitForTransaction({
                         digest,
                         options: {
                             showEffects: true,
@@ -68,12 +70,24 @@ export default function Token() {
                         },
                     });
 
-                    if (effects?.status.status === "success") {
-                        const newPkgId = effects.created?.find(
-                            item => item.owner === "Immutable"
-                        )?.reference.objectId;
+                    if (res.effects?.status.status === "success") {
+                        console.log("Token created successfully:", res);
 
-                        setNewTokenId(newPkgId || '');
+                        const txId = res.effects.transactionDigest; // /tx/{txId}
+                        const newPkgId = res.objectChanges?.find(
+                            (item) => item.type === "published"
+                        )?.packageId;
+
+                        const treasuryCap = res.objectChanges?.find(
+                            (item) =>
+                                item.type === "created" &&
+                                typeof item.objectType === "string" &&
+                                item.objectType.includes("TreasuryCap")
+                        )?.objectId;
+
+                        setTxId(txId);
+                        setNewPkgId(newPkgId || "");
+                        setTreasuryCap(treasuryCap);
                     } else {
                         throw new Error("Publishing failed");
                     }
@@ -139,12 +153,16 @@ export default function Token() {
                     {isSuccess && (
                         <Box mt="4" style={{ color: "#22c55e", display: "flex", flexDirection: "column", gap: "4px", fontWeight: "semibold" }}>
                             <Text>Token created successfully!</Text>
-                            <Text>Token ID: {newTokenId || "Loading ID..."}</Text>
-                            {newTokenId && (
-                                <Link href={`https://suiscan.xyz/testnet/object/${newTokenId}`} target="_blank">
-                                    View token
+                            <Text>Token ID: {newPkgId || "Loading ID..."}</Text>
+                            {newPkgId && (
+                                <Link href={`https://suiscan.xyz/testnet/tx/${txId}`} target="_blank">
+                                    View tx
                                 </Link>
                             )}
+                            <Link href={`https://suiscan.xyz/testnet/object/${newPkgId}`} target="_blank">
+                                Package Id ({newPkgId})
+                            </Link>
+                            <p>Here is your treasury cap to perform transactions: {treasuryCap}</p>
                         </Box>
                     )}
                 </Box>

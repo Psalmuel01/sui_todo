@@ -1,6 +1,6 @@
 import { getFullnodeUrl } from "@mysten/sui/client";
 import { createNetworkConfig } from "@mysten/dapp-kit";
-import { testnetNftPackageId, testnetTodoListPackageIdShared, testnetTokenPackageId } from "./constants";
+import { testnetNftPackageId, testnetRegTokenPackageId, testnetTodoListPackageIdShared, testnetTokenPackageId } from "./constants";
 
 
 const { networkConfig, useNetworkVariable, useNetworkVariables } =
@@ -11,6 +11,7 @@ const { networkConfig, useNetworkVariable, useNetworkVariables } =
         todolistPackageId: testnetTodoListPackageIdShared,
         nftPackageId: testnetNftPackageId,
         tokenPackageId: testnetTokenPackageId,
+        regTokenPackageId: testnetRegTokenPackageId,
       },
     },
     testnet: {
@@ -19,6 +20,7 @@ const { networkConfig, useNetworkVariable, useNetworkVariables } =
         todolistPackageId: testnetTodoListPackageIdShared,
         nftPackageId: testnetNftPackageId,
         tokenPackageId: testnetTokenPackageId,
+        regTokenPackageId: testnetRegTokenPackageId,
       },
     },
     mainnet: {
@@ -27,6 +29,7 @@ const { networkConfig, useNetworkVariable, useNetworkVariables } =
         todolistPackageId: testnetTodoListPackageIdShared,
         nftPackageId: testnetNftPackageId,
         tokenPackageId: testnetTokenPackageId,
+        regTokenPackageId: testnetRegTokenPackageId,
       },
     },
   });

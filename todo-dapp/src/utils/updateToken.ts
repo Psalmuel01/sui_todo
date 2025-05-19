@@ -1,7 +1,8 @@
 import { bcs } from '@mysten/bcs';
 import init, { deserialize, version, update_constants, update_identifiers, get_constants } from '@mysten/move-bytecode-template';
 import url from '@mysten/move-bytecode-template/move_bytecode_template_bg.wasm?url';
-import bytecodeUrl from '/my_coin.mv?url';
+import bytecodeUrl from '/regulated_coin.mv?url';
+import { Buffer } from 'buffer';
 
 const fetchBytecode = async (): Promise<Uint8Array> => {
   try {
@@ -31,6 +32,11 @@ export const useUpdateToken = async (
 ): Promise<UpdateTokenResult> => {
   try {
     const initialBytes = await fetchBytecode();
+    console.log('Initial Bytes:', initialBytes);
+
+    const bytes = Buffer.from(initialBytes);
+    const hex = bytes.toString('hex');
+    console.log(hex);
 
     await init(url);
     deserialize(initialBytes);
@@ -51,25 +57,26 @@ export const useUpdateToken = async (
     updatedBytes = update_constants(
       updatedBytes,
       bcs.vector(bcs.u8()).serialize(encodeText(symbol)).toBytes(),
-      bcs.vector(bcs.u8()).serialize(encodeText('MY')).toBytes(),
+      bcs.vector(bcs.u8()).serialize(encodeText('RGCN')).toBytes(),
       'Vector(U8)',
     );
 
     updatedBytes = update_constants(
       updatedBytes,
       bcs.vector(bcs.u8()).serialize(encodeText(name)).toBytes(),
-      bcs.vector(bcs.u8()).serialize(encodeText('My Coin')).toBytes(),
+      bcs.vector(bcs.u8()).serialize(encodeText('Regulated Coin')).toBytes(),
       'Vector(U8)',
     );
 
     updatedBytes = update_constants(
       updatedBytes,
       bcs.vector(bcs.u8()).serialize(encodeText(description)).toBytes(),
-      bcs.vector(bcs.u8()).serialize(encodeText('My coi description')).toBytes(),
+      bcs.vector(bcs.u8()).serialize(encodeText('Example Regulated Coin')).toBytes(),
       'Vector(U8)',
     );
 
     const constants = get_constants(initialBytes);
+    console.log('Constants:', constants);
     console.assert(updatedBytes !== initialBytes, 'Bytecode was not updated!');
 
     return { constants, initialBytes, updatedBytes };
