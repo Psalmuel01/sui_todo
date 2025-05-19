@@ -56,11 +56,11 @@ export default function TokenDetails({
 
         // Call the mint function on the Coin contract
         tx.moveCall({
-            target: `${newPkgId}::coin::mint`,
+            target: `${newPkgId}::regulated_coin::mint`,
             arguments: [
                 tx.object(treasuryCap),
-                tx.pure(Number(mintAmount)),
-                tx.pure(mintRecipient),
+                tx.pure.u64(Number(mintAmount)),
+                tx.pure.address(mintRecipient),
             ],
         });
 
@@ -98,7 +98,7 @@ export default function TokenDetails({
 
         // Call the burn function on the Coin contract
         tx.moveCall({
-            target: `${newPkgId}::coin::burn`,
+            target: `${newPkgId}::my_coin::burn`,
             arguments: [
                 tx.object(treasuryCap),
                 tx.pure(Number(burnAmount)),
