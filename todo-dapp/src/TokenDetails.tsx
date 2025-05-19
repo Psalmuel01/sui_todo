@@ -75,6 +75,8 @@ export default function TokenDetails({
 
                     if (res.effects?.status.status === "success") {
                         console.log("Mint successful:", res);
+                        const coinCap = res.effects.created?.[0]?.reference?.objectId;
+                        console.log("Created coin cap:", coinCap); // should be stored and used to burn
                         setMintSuccess(true);
                         setTimeout(() => setMintSuccess(false), 3000);
                     }
@@ -86,7 +88,7 @@ export default function TokenDetails({
         );
     };
 
-    const handleBurn = async (e) => {
+    const handleBurn = async (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Burning with values:", {
             treasuryCap,
@@ -98,10 +100,10 @@ export default function TokenDetails({
 
         // Call the burn function on the Coin contract
         tx.moveCall({
-            target: `${newPkgId}::my_coin::burn`,
+            target: `${newPkgId}::regulated_coin::burn`,
             arguments: [
                 tx.object(treasuryCap),
-                tx.pure(Number(burnAmount)),
+                tx.object(burnAmount),
             ],
         });
 
@@ -153,6 +155,7 @@ export default function TokenDetails({
                             <InfoRow label="Decimals" value={decimal} />
                             <InfoRow label="Package ID" value={newPkgId} isTruncated />
                             <InfoRow label="Treasury Cap" value={treasuryCap} isTruncated />
+                            {/* add coin owner, and coincap after coin is minted */}
                             <InfoRow
                                 label="Explorer"
                                 value={
@@ -254,7 +257,6 @@ export default function TokenDetails({
                                         placeholder="Amount"
                                         value={burnAmount}
                                         onChange={(e) => setBurnAmount(e.target.value)}
-                                        type="number"
                                         required
                                         style={{
                                             padding: "8px 12px",

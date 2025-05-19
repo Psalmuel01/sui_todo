@@ -34,9 +34,10 @@ export const useUpdateToken = async (
     const initialBytes = await fetchBytecode();
     console.log('Initial Bytes:', initialBytes);
 
-    const bytes = Buffer.from(initialBytes);
-    const hex = bytes.toString('hex');
-    console.log(hex);
+    // to get hex for nextjs app as it cant read mv file
+    // const bytes = Buffer.from(initialBytes);
+    // const hex = bytes.toString('hex');
+    // console.log(hex);
 
     await init(url);
     deserialize(initialBytes);
@@ -50,7 +51,7 @@ export const useUpdateToken = async (
     updatedBytes = update_constants(
       updatedBytes,
       bcs.u8().serialize(decimal).toBytes(),
-      bcs.u8().serialize(2).toBytes(),
+      bcs.u8().serialize(5).toBytes(),
       'U8',
     );
 
