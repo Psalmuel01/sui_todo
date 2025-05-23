@@ -1,7 +1,11 @@
 import { bcs } from '@mysten/bcs';
 import init, { deserialize, version, update_constants, update_identifiers, get_constants } from '@mysten/move-bytecode-template';
 import url from '@mysten/move-bytecode-template/move_bytecode_template_bg.wasm?url';
-import bytecodeUrl from '/regulated_coin.mv?url';
+import bytecodeUrl from '/my_coin.mv?url';
+// import bytecodeUrl from '/p_regulated_coin.mv?url';
+// import bytecodeUrl from '/u_regulated_coin.mv?url';
+
+// import bytecodeUrl from '/my_nft.mv?url';
 import { Buffer } from 'buffer';
 
 const fetchBytecode = async (): Promise<Uint8Array> => {
@@ -24,6 +28,12 @@ interface UpdateTokenResult {
   updatedBytes: Uint8Array;
 }
 
+const fetchBytecodeHex = (initialBytes: Uint8Array): string => {
+  const bytes = Buffer.from(initialBytes);
+  const hex = bytes.toString('hex');
+  return hex;
+}
+
 export const useUpdateToken = async (
   name: string,
   symbol: string,
@@ -35,9 +45,8 @@ export const useUpdateToken = async (
     console.log('Initial Bytes:', initialBytes);
 
     // to get hex for nextjs app as it cant read mv file
-    // const bytes = Buffer.from(initialBytes);
-    // const hex = bytes.toString('hex');
-    // console.log(hex);
+    const hex = fetchBytecodeHex(initialBytes);
+    console.log(hex);
 
     await init(url);
     deserialize(initialBytes);

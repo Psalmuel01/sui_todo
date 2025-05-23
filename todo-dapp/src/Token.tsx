@@ -27,6 +27,7 @@ export default function Token() {
     const [decimal, setDecimal] = useState('');
     const [newPkgId, setNewPkgId] = useState('');
     const [txId, setTxId] = useState('');
+    const [owner, setOwner] = useState('')
     const [treasuryCap, setTreasuryCap] = useState('');
     const [tokenCreated, setTokenCreated] = useState(false);
 
@@ -74,6 +75,8 @@ export default function Token() {
                         console.log("Token created successfully:", res);
 
                         const txId = res.effects.transactionDigest;
+                        const owner = res.effects.created?.[0]?.owner;
+
                         const newPkgId = res.objectChanges?.find(
                             (item) => item.type === "published"
                         )?.packageId;
@@ -86,6 +89,7 @@ export default function Token() {
                         )?.objectId;
 
                         setTxId(txId);
+                        setOwner(owner);
                         setNewPkgId(newPkgId || "");
                         setTreasuryCap(treasuryCap);
 
@@ -109,7 +113,7 @@ export default function Token() {
         description,
         decimal,
         newPkgId,
-        txId,
+        owner,
         treasuryCap
     };
 

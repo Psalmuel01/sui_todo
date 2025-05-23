@@ -23,7 +23,7 @@ interface TokenDetailsProps {
         description: string;
         decimal: string;
         newPkgId: string;
-        txId: string;
+        owner: string;
         treasuryCap: string;
     };
     onBack: () => void;
@@ -33,12 +33,14 @@ export default function TokenDetails({
     tokenData,
     onBack
 }: TokenDetailsProps) {
-    const { name, symbol, description, decimal, newPkgId, txId, treasuryCap } = tokenData;
+    const { name, symbol, description, decimal, newPkgId, owner, treasuryCap } = tokenData;
+    const [coinCap, setCoinCap] = useState('');
     const [mintAmount, setMintAmount] = useState('');
     const [mintRecipient, setMintRecipient] = useState('');
     const [burnAmount, setBurnAmount] = useState('');
     const [mintSuccess, setMintSuccess] = useState(false);
     const [burnSuccess, setBurnSuccess] = useState(false);
+
 
     const { mutate: signAndExecute, isPending } = useSignAndExecuteTransaction();
     const suiClient = useSuiClient();
@@ -76,6 +78,7 @@ export default function TokenDetails({
                     if (res.effects?.status.status === "success") {
                         console.log("Mint successful:", res);
                         const coinCap = res.effects.created?.[0]?.reference?.objectId;
+                        setCoinCap(coinCap as string);
                         console.log("Created coin cap:", coinCap); // should be stored and used to burn
                         setMintSuccess(true);
                         setTimeout(() => setMintSuccess(false), 3000);
@@ -155,7 +158,8 @@ export default function TokenDetails({
                             <InfoRow label="Decimals" value={decimal} />
                             <InfoRow label="Package ID" value={newPkgId} isTruncated />
                             <InfoRow label="Treasury Cap" value={treasuryCap} isTruncated />
-                            {/* add coin owner, and coincap after coin is minted */}
+                            <InfoRow label="Coin Owner" value={owner} isTruncated />
+                            <InfoRow label="Coin Cap" value={coinCap} isTruncated />
                             <InfoRow
                                 label="Explorer"
                                 value={

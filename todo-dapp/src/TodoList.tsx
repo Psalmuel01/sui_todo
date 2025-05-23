@@ -10,6 +10,10 @@ import { SuiObjectData } from "@mysten/sui/client";
 export function TodoList({ listId }: { listId: string }) {
     const todolistPackageId = useNetworkVariable("todolistPackageId");
     const suiClient = useSuiClient();
+    // const metadata = suiClient.getCoinMetadata({
+    //     coinType: "0x2::sui::SUI",
+    // });
+    // console.log(metadata.decimals);
     // const account = useCurrentAccount();
     const { mutate: signAndExecute } = useSignAndExecuteTransaction();
     const [isModalOpen, setIsModalOpen] = useState(false);
